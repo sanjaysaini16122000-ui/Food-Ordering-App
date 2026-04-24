@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard, RolesGuard } from '../common/guards';
 import { Roles } from '../common/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role } from '../common/enums';
 
 @InputType()
 class AddPaymentMethodInput {

@@ -1,7 +1,19 @@
 import { Field, ObjectType, ID, Float, Int, InputType, registerEnumType } from '@nestjs/graphql';
-import { OrderStatus, Country } from '@prisma/client';
+import { OrderStatus, Country } from '../common/enums';
 
 registerEnumType(OrderStatus, { name: 'OrderStatus' });
+
+@ObjectType()
+export class OrderItem {
+  @Field(() => ID)
+  id: string;
+
+  @Field(() => Int)
+  quantity: number;
+
+  @Field(() => Float)
+  price: number;
+}
 
 @ObjectType()
 export class Order {
@@ -21,24 +33,6 @@ export class Order {
   createdAt: Date;
 }
 
-@ObjectType()
-export class OrderItem {
-  @Field(() => ID)
-  id: string;
-
-  @Field(() => Int)
-  quantity: number;
-
-  @Field(() => Float)
-  price: number;
-}
-
-@InputType()
-export class CreateOrderInput {
-  @Field(() => [OrderItemInput])
-  items: OrderItemInput[];
-}
-
 @InputType()
 export class OrderItemInput {
   @Field(() => ID)
@@ -46,4 +40,10 @@ export class OrderItemInput {
 
   @Field(() => Int)
   quantity: number;
+}
+
+@InputType()
+export class CreateOrderInput {
+  @Field(() => [OrderItemInput])
+  items: OrderItemInput[];
 }

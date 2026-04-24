@@ -6,34 +6,20 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  MANAGER
-  MEMBER
-}
-
-enum Country {
-  INDIA
-  AMERICA
-}
-
-enum OrderStatus {
-  PENDING
-  PAID
-  CANCELLED
-}
+// SQLite does not support native enums, so we use String with @default
+// We can still use the TypeScript enums in our code.
 
 model User {
   id             String          @id @default(uuid())
   email          String          @unique
   password       String
   name           String
-  role           Role            @default(MEMBER)
-  country        Country
+  role           String          @default("MEMBER")
+  country        String
   orders         Order[]
   paymentMethods PaymentMethod[]
   createdAt      DateTime        @default(now())
@@ -46,7 +32,7 @@ model Restaurant {
   id          String     @id @default(uuid())
   name        String
   description String?
-  country     Country
+  country     String
   menuItems   MenuItem[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -71,8 +57,8 @@ model Order {
   userId     String
   user       User        @relation(fields: [userId], references: [id])
   total      Float
-  status     OrderStatus @default(PENDING)
-  country    Country
+  status     String      @default("PENDING")
+  country    String
   orderItems OrderItem[]
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
@@ -88,15 +74,15 @@ model OrderItem {
   menuItemId String
   menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
   quantity   Int
-  price      Float // Captured price at time of order
+  price      Float
 }
 
 model PaymentMethod {
   id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  type      String // e.g., "CARD", "UPI"
-  provider  String // e.g., "STRIPE", "RAZORPAY"
+  type      String
+  provider  String
   lastFour  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

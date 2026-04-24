@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Country } from '@prisma/client';
+import { Country } from '../common/enums';
 
 @Injectable()
 export class RestaurantService {

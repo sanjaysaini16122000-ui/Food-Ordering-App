@@ -8,7 +8,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './roles.decorator';
-import { Role } from '@prisma/client';
+import { Role } from './enums';
 
 @Injectable()
 export class GqlAuthGuard implements CanActivate {

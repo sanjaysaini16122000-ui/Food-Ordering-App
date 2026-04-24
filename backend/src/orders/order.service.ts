@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderInput } from './order.models';
-import { OrderStatus, Country } from '@prisma/client';
+import { OrderStatus, Country } from '../common/enums';
 
 @Injectable()
 export class OrderService {
@@ -9,7 +9,7 @@ export class OrderService {
 
   async create(userId: string, country: Country, input: CreateOrderInput) {
     let total = 0;
-    const items = [];
+    const items: any[] = [];
 
     for (const item of input.items) {
       const menuItem = await this.prisma.menuItem.findUnique({

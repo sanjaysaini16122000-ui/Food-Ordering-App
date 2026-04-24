@@ -1,17 +1,8 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Role, Country } from '@prisma/client';
+import { Role, Country } from '../common/enums';
 
 registerEnumType(Role, { name: 'Role' });
 registerEnumType(Country, { name: 'Country' });
-
-@ObjectType()
-export class AuthPayload {
-  @Field()
-  accessToken: string;
-
-  @Field()
-  user: User;
-}
 
 @ObjectType()
 export class User {
@@ -29,4 +20,13 @@ export class User {
 
   @Field(() => Country)
   country: Country;
+}
+
+@ObjectType()
+export class AuthPayload {
+  @Field()
+  accessToken: string;
+
+  @Field(() => User)
+  user: User;
 }

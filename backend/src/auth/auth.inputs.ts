@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { Role, Country } from '@prisma/client';
+import { Role, Country } from '../common/enums';
 
 @InputType()
 export class LoginInput {

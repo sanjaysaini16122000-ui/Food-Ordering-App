@@ -5,7 +5,7 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard, RolesGuard } from '../common/guards';
 import { Roles } from '../common/roles.decorator';
 import { CurrentUser } from '../common/current-user.decorator';
-import { Role, OrderStatus } from '@prisma/client';
+import { Role, OrderStatus } from '../common/enums';
 
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard)

@@ -1,0 +1,117 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  email: String!
+  name: String!
+  role: Role!
+  country: Country!
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum Country {
+  INDIA
+  AMERICA
+}
+
+type AuthPayload {
+  accessToken: String!
+  user: User!
+}
+
+type MenuItem {
+  id: ID!
+  name: String!
+  price: Float!
+  description: String
+}
+
+type Restaurant {
+  id: ID!
+  name: String!
+  description: String
+  country: Country!
+  menuItems: [MenuItem!]
+}
+
+type OrderItem {
+  id: ID!
+  quantity: Int!
+  price: Float!
+}
+
+type Order {
+  id: ID!
+  total: Float!
+  status: OrderStatus!
+  orderItems: [OrderItem!]!
+  createdAt: DateTime!
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type PaymentMethod {
+  id: ID!
+  type: String!
+  provider: String!
+}
+
+type Query {
+  getRestaurants: [Restaurant!]!
+  getMenuItems(restaurantId: ID!): [MenuItem!]!
+  getOrders: [Order!]!
+}
+
+type Mutation {
+  createOrder(input: CreateOrderInput!): Order!
+  checkoutOrder(orderId: ID!): Order!
+  cancelOrder(orderId: ID!): Order!
+  addPaymentMethod(input: AddPaymentMethodInput!): PaymentMethod!
+  login(input: LoginInput!): AuthPayload!
+  signup(input: SignupInput!): AuthPayload!
+}
+
+input CreateOrderInput {
+  items: [OrderItemInput!]!
+}
+
+input OrderItemInput {
+  menuItemId: ID!
+  quantity: Int!
+}
+
+input AddPaymentMethodInput {
+  type: String!
+  provider: String!
+  lastFour: String
+  userId: ID!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input SignupInput {
+  email: String!
+  password: String!
+  name: String!
+  role: Role!
+  country: Country!
+}

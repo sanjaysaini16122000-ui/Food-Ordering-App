@@ -1,5 +1,20 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
-import { Country } from '@prisma/client';
+import { Country } from '../common/enums';
+
+@ObjectType()
+export class MenuItem {
+  @Field(() => ID)
+  id: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  price: number;
+
+  @Field({ nullable: true })
+  description?: string;
+}
 
 @ObjectType()
 export class Restaurant {
@@ -17,19 +32,4 @@ export class Restaurant {
 
   @Field(() => [MenuItem], { nullable: true })
   menuItems?: MenuItem[];
-}
-
-@ObjectType()
-export class MenuItem {
-  @Field(() => ID)
-  id: string;
-
-  @Field()
-  name: string;
-
-  @Field()
-  price: number;
-
-  @Field({ nullable: true })
-  description?: string;
 }
