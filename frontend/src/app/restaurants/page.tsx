@@ -19,9 +19,15 @@ const GET_RESTAURANTS = gql`
   }
 `;
 
+import { useCart } from '@/context/cart-context';
+import { CartSheet } from '@/components/cart-sheet';
+import { useState } from 'react';
+
 export default function RestaurantsPage() {
   const { user, logout } = useAuth();
   const { data, loading, error } = useQuery(GET_RESTAURANTS);
+  const { totalItems } = useCart();
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -50,9 +56,17 @@ export default function RestaurantsPage() {
               <p className="text-sm font-bold text-gray-900">{user?.name}</p>
               <p className="text-xs text-gray-500 uppercase tracking-wider">{user?.role} • {user?.country}</p>
             </div>
-            <Link href="/cart" className="text-gray-600 hover:text-orange-600 transition-colors">
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-gray-600 hover:text-orange-600 transition-colors"
+            >
               <ShoppingCart size={24} />
-            </Link>
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 bg-orange-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </button>
             <button 
               onClick={logout}
               className="text-gray-400 hover:text-red-600 transition-colors"
@@ -115,6 +129,13 @@ export default function RestaurantsPage() {
           ))}
         </div>
       </main>
+
+      {/* Cart Sheet */}
+      <CartSheet 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        onCheckout={() => {}} 
+      />
     </div>
     </ProtectedRoute>
   );
