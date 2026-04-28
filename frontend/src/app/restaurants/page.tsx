@@ -101,7 +101,7 @@ export default function RestaurantsPage() {
       </header>
 
       {/* Hero Section */}
-      <div className="relative bg-gray-900 text-white py-24 px-4 overflow-hidden">
+      <div className="relative bg-gray-900 text-white py-24 px-4 overflow-hidden mt-6 rounded-3xl mx-4 lg:mx-8 shadow-2xl">
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2000" 
