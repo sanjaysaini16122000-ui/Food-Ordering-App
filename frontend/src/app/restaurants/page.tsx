@@ -3,7 +3,7 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useAuth } from '@/context/auth-context';
-import { Utensils, MapPin, Search, LogOut, ShoppingCart } from 'lucide-react';
+import { Utensils, MapPin, Search, LogOut, ShoppingCart, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 
 import { ProtectedRoute } from '@/components/protected-route';
@@ -42,46 +42,82 @@ export default function RestaurantsPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="bg-orange-600 p-2 rounded-lg text-white">
-              <Utensils size={24} />
+      <header className="bg-gray-900/95 backdrop-blur-md border-b border-gray-800 sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+          <Link href="/restaurants" className="flex items-center space-x-3 group">
+            <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-2.5 rounded-xl text-white shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
+              <Utensils size={22} strokeWidth={2.5} />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">FoodFlow</h1>
-          </div>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">FoodFlow</h1>
+          </Link>
           
-          <div className="flex items-center space-x-6">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-gray-900">{user?.name}</p>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">{user?.role} • {user?.country}</p>
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* User Info */}
+            <div className="hidden md:flex items-center space-x-3 bg-gray-800/80 px-4 py-2 rounded-full border border-gray-700/50 shadow-sm">
+              <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-sm">
+                {user?.name?.[0]?.toUpperCase() || 'U'}
+              </div>
+              <div className="text-left leading-tight">
+                <p className="text-sm font-bold text-gray-100">{user?.name}</p>
+                <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">{user?.role} • {user?.country}</p>
+              </div>
             </div>
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-gray-600 hover:text-orange-600 transition-colors"
-            >
-              <ShoppingCart size={24} />
-              {totalItems > 0 && (
-                <span className="absolute top-0 right-0 bg-orange-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                  {totalItems}
-                </span>
-              )}
-            </button>
-            <button 
-              onClick={logout}
-              className="text-gray-400 hover:text-red-600 transition-colors"
-            >
-              <LogOut size={24} />
-            </button>
+
+            {/* Actions */}
+            <div className="flex items-center bg-gray-800/80 px-2 py-1.5 rounded-full border border-gray-700/50 shadow-sm space-x-1">
+              <Link 
+                href="/orders" 
+                className="p-2 text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-full transition-colors relative"
+                title="My Orders"
+              >
+                <ShoppingBag size={20} strokeWidth={2.5} />
+              </Link>
+              
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-2 text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-full transition-colors"
+                title="Cart"
+              >
+                <ShoppingCart size={20} strokeWidth={2.5} />
+                {totalItems > 0 && (
+                  <span className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm border-2 border-gray-800">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+              
+              <div className="w-px h-5 bg-gray-700 mx-1"></div>
+              
+              <button 
+                onClick={logout}
+                className="p-2 text-gray-400 hover:bg-red-500/10 hover:text-red-400 rounded-full transition-colors"
+                title="Logout"
+              >
+                <LogOut size={20} strokeWidth={2.5} />
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <div className="bg-orange-600 text-white py-12 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-extrabold mb-4">Delicious food in {user?.country}</h2>
-          <p className="text-orange-100 text-lg">Order from the best local restaurants near you</p>
+      <div className="relative bg-gray-900 text-white py-24 px-4 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2000" 
+            alt="Delicious food background" 
+            className="w-full h-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto text-center z-10">
+          <h2 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight text-white drop-shadow-lg">
+            Delicious food in <span className="text-orange-500">{user?.country}</span>
+          </h2>
+          <p className="text-gray-200 text-xl md:text-2xl font-medium max-w-2xl mx-auto drop-shadow-md">
+            Order from the best local restaurants near you
+          </p>
         </div>
       </div>
 

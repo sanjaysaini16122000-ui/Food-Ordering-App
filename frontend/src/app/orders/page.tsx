@@ -1,5 +1,5 @@
 'use client';
-
+import { useEffect } from 'react';
 import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useAuth } from '@/context/auth-context';
@@ -33,12 +33,47 @@ const CHECKOUT_ORDER = gql`
   }
 `;
 
+const ORDER_STATUS_SUBSCRIPTION = gql`
+  subscription OrderStatusUpdated($userId: ID!) {
+    orderStatusUpdated(userId: $userId) {
+      id
+      status
+    }
+  }
+`;
+
 export default function OrdersPage() {
   const { user } = useAuth();
-  const { data, loading, refetch } = useQuery(GET_ORDERS);
+  const { data, loading, refetch, subscribeToMore } = useQuery<any>(GET_ORDERS);
   const [checkoutOrder, { loading: checkoutLoading }] = useMutation(CHECKOUT_ORDER, {
     onCompleted: () => refetch(),
   });
+
+  useEffect(() => {
+    if (!user?.id || !subscribeToMore) return;
+
+    const unsubscribe = subscribeToMore({
+      document: ORDER_STATUS_SUBSCRIPTION,
+      variables: { userId: user.id },
+      updateQuery: (prev: any, { subscriptionData }: { subscriptionData: any }) => {
+        if (!subscriptionData.data) return prev;
+        const updatedOrder = subscriptionData.data.orderStatusUpdated;
+
+        return {
+          ...prev,
+          getOrders: prev.getOrders.map((order: any) =>
+            order.id === updatedOrder.id
+              ? { ...order, status: updatedOrder.status }
+              : order
+          ),
+        };
+      },
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user?.id, subscribeToMore]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {

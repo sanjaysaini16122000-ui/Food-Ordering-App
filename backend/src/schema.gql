@@ -115,3 +115,7 @@ input SignupInput {
   role: Role!
   country: Country!
 }
+
+type Subscription {
+  orderStatusUpdated(userId: ID!): Order!
+}
