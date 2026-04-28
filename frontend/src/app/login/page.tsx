@@ -28,7 +28,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   
   const [loginMutation, { loading, error }] = useMutation(LOGIN_MUTATION, {
-    onCompleted: (data) => {
+    onCompleted: (data: any) => {
       login(data.login.accessToken, data.login.user);
     },
   });
